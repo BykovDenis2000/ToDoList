@@ -11,6 +11,7 @@ public class Note {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String text;
+    private String userId;
 
     public Note(){}
 
@@ -32,4 +33,7 @@ public class Note {
     public void setText(String text){
         this.text = text;
     }
+
+    public void setUserId(String userId) {this.userId = userId;}
+
 }

@@ -1,8 +1,7 @@
 package com.example.demo.service;
 
+import com.example.demo.model.User;
 import com.example.demo.model.Note;
-
-import java.util.List;
 
 public interface ToDoService {
 
@@ -10,7 +9,9 @@ public interface ToDoService {
 
     void deleteNote(int id);
 
-    List<Note> listNotes();
+    Iterable<Note> listNotes();
 
     void saveNote(Note note);
+
+    void saveUser(User user);
 }

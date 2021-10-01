@@ -1,44 +1,45 @@
 package com.example.demo.service;
 
+import com.example.demo.model.User;
 import com.example.demo.model.Note;
+import com.example.demo.repos.UserRepo;
 import com.example.demo.repos.NotesRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class ToDoServiceIml implements ToDoService {
 
     @Autowired
     NotesRepo notesRepo;
+    @Autowired
+    UserRepo userRepo;
 
     @Override
     public void createNote(String text) {
+
         notesRepo.save(new Note(text));
     }
 
     @Override
     public void deleteNote(int id) {
-        for(Note note : notesRepo.findAll()){
-            if(note.getId()==id){
-                notesRepo.delete(note);
-            }
-        }
+
+        notesRepo.deleteById(id);
     }
 
     @Override
-    public List<Note> listNotes() {
-        List<Note> noteList = new ArrayList<>();
-        for(Note note : notesRepo.findAll()){
-            noteList.add(note);
-        }
-        return noteList;
+    public Iterable<Note> listNotes() {
+
+        return notesRepo.findAll();
     }
 
     @Override
     public void saveNote(Note note) {
         notesRepo.save(note);
+    }
+
+    @Override
+    public void saveUser(User user) {
+        userRepo.save(user);
     }
 }
