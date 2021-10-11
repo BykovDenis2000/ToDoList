@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.model.ToDoList;
 import com.example.demo.model.User;
 import com.example.demo.service.MailSender;
 import com.example.demo.service.ToDoService;
@@ -10,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 public class ToDoController {
@@ -28,12 +30,35 @@ public class ToDoController {
         return "redirect:/notes";
     }
 
-    @GetMapping("/notes")
-    public String listNotes(Model model, @AuthenticationPrincipal User user) {
+    @GetMapping("/notes/{id}")
+    public String listNotes(@PathVariable Integer id,Model model, @AuthenticationPrincipal User user) {
         Iterable<Note> listNotes = toDoService.listNotes();
         model.addAttribute("listNotes", listNotes);
         model.addAttribute("user", user);
-        mailSender.send(user.getEmail(),"Blabla","hi denis");
+        return "todolist";
+    }
+
+    @GetMapping("/add_todo_list")
+    public String showAddToDoForm(Model model) {
+
+        model.addAttribute("todolist", new ToDoList());
+
+        return "add_todo_list_form";
+    }
+
+    @PostMapping("/process_todo_list_add")
+    public String processToDoListAdd(ToDoList toDoList,@AuthenticationPrincipal User user) {
+        toDoList.setUserId(user);
+        toDoService.saveToDoList(toDoList);
+
+        return "redirect:/notes";
+    }
+
+    @GetMapping("/todolists")
+    public String toDoLists(Model model, @AuthenticationPrincipal User user) {
+        List<ToDoList> listNotes = toDoService.findByUserId(user.getUserId());
+        model.addAttribute("listNotes", listNotes);
+        model.addAttribute("user", user);
         return "todolist";
     }
 
@@ -69,6 +94,12 @@ public class ToDoController {
     @PostMapping("/process_registration")
     public String processRegistration(User user) {
         toDoService.saveUser(user);
+        return "redirect:/notes";
+    }
+
+    @PostMapping("/send_email")
+    public String sendEmail(@AuthenticationPrincipal User user) {
+        mailSender.send(user.getEmail(),"ToDo List",toDoService.toDoListToString());
         return "redirect:/notes";
     }
 }

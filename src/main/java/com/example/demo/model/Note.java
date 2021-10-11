@@ -1,9 +1,6 @@
 package com.example.demo.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Note {
@@ -11,7 +8,8 @@ public class Note {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String text;
-    private String userId;
+
+    private int listId;
 
     public Note(){}
 
@@ -34,6 +32,6 @@ public class Note {
         this.text = text;
     }
 
-    public void setUserId(String userId) {this.userId = userId;}
+    public void setUserId(ToDoList listId) {this.listId = listId;}
 
 }
